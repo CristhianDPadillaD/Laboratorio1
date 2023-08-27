@@ -28,7 +28,12 @@ public class Laboratorio1 {
             // bandera que permite terminar el programa
             boolean activo = true;
             
+            //Array donde se guardan los estudiantes
             ArrayList<Alumno>misAlumnos = new ArrayList<Alumno>();
+            
+            
+            cargarReporte (misAlumnos);
+            
             do {
                 
                 //Creamos un try catch en caso de que no se digite un número en el menú
@@ -41,7 +46,7 @@ public class Laboratorio1 {
                             
                             System.out.println("Opcion uno");
                             agregarAlumno (misAlumnos, lector);
-                            generarReporte(misAlumnos, lector);
+                            generarReporte(misAlumnos);
                             
                             
                             break;
@@ -57,7 +62,10 @@ public class Laboratorio1 {
                             break;
                         case 4:
                             System.out.println("Opcion cuatro");
+                            
+                            
                             consultarAlumnos(misAlumnos);
+                           
                             
                             break;
                         case 5:
@@ -67,12 +75,7 @@ public class Laboratorio1 {
                             break;
                         case 6:
                             System.out.println("Opcion seis");
-                            generarReporte(misAlumnos, lector);
-                            break;
-                            
-                        case 7:
-                            System.out.println("Opcion siete");
-                            cargarReporte(misAlumnos);
+                            generarReporteSemestre(misAlumnos, lector);
                             break;
                             
                             
@@ -108,13 +111,35 @@ public class Laboratorio1 {
         System.out.println("4. Consultar alumno");
         System.out.println("5. Terminar programa");
         System.out.println("6. Generar reporte por semestre");
-        System.out.println("7. Leer reporte");
         System.out.println(" - - - - - - - - - - - - - - - - - - - - - -");
         
         
     
     }
     
+    //método para generar Reporte 
+    public static void generarReporte (ArrayList<Alumno>misAlumnos) throws FileNotFoundException{
+        
+        //Creamos el archivo con la clase File y digitamos la dirección donde queremos que se guarde
+        File archivo = new File ("./data/Reporte.txt");
+        
+        //Creamos la pluma para escribir en el archivo
+        PrintWriter pluma = new PrintWriter (archivo);
+        
+          for(Alumno alumno : misAlumnos){
+            // enseñamos los datos recibidos1
+           
+                pluma.println(alumno.getCedula()+","+ 
+                                    alumno.getNombre() +"," +
+                                    alumno.getApellido() + ","+ 
+                                    alumno.getCorreo() + "," +
+                                    alumno.getCelular() +"," +
+                                    alumno.getSemestre());  
+          }
+                
+                    pluma.close();
+       
+    }
     //método para agregar alumno
     public static void agregarAlumno (ArrayList<Alumno> misAlumnos, Scanner lector){
         
@@ -292,14 +317,19 @@ public class Laboratorio1 {
         }else{
             // creamos una variable donde se guarda en tamaño del array
             int numeroEst = misAlumnos.size();
+            
             // si es iguala  uno la palabra es en singular
               if(misAlumnos.size()==1){
+                  
                   System.out.println("Hay "+ numeroEst + " alumno");
                   System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+                  
               }else{
+                  
                   // al ser más de uno la palabra es en plurar
                   System.out.println("Hay "+ numeroEst + " alumnos");
                   System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+                  
               }
               
             // ciclo parar recorrer el contenedor 
@@ -323,10 +353,10 @@ public class Laboratorio1 {
           System.out.println( "########################################");
     }
     
-     //método para generar Reporte
-    public static void generarReporte (ArrayList<Alumno> misAlumnos, Scanner lector) throws FileNotFoundException{
+     //método para generar Reporte p0or semestre
+    public static void generarReporteSemestre (ArrayList<Alumno> misAlumnos, Scanner lector) throws FileNotFoundException{
         
-        //Creamos el archivo con la clse file
+        //Creamos el archivo con la clase file
         File archivo = new File("./data/Reporte.txt");
         
         //Creamos la pluma para escribir el archivo
@@ -367,34 +397,37 @@ public class Laboratorio1 {
     
       //método para cargar archivos
     public static void cargarReporte (ArrayList<Alumno> misAlumnos) throws FileNotFoundException, IOException{
-        
+        //Ubicacion donde leer
         File archivo = new File ("./data/Reporte.txt");
-        BufferedReader lc;
+        
         try (FileReader fr = new FileReader (archivo)) {
-            lc = new BufferedReader(fr);
-            String linea = lc.readLine();
             
-            while(linea != null){
+            //Variable donde se va a contener lo leido
+           BufferedReader lc = new BufferedReader(fr);
+            
+            String linea;
+            
+            while((linea= lc.readLine()) != null){
                 String [] datos = linea.split(",");
                 
-                String cedula = datos[0];
-                String nombre = datos[1];
-                String apellido= datos[2];
-                String correo = datos[3];
-                String celular = datos[4];
-                String semestre = datos[5];
+                String cedula = datos[0].trim();
+                String nombre = datos[1].trim();
+                String apellido= datos[2].trim();
+                String correo = datos[3].trim();
+                String celular = datos[4].trim();
+                String semestre = datos[5].trim();
                 
                 Alumno nuevo = new Alumno(cedula, nombre, apellido, correo, celular, semestre);
                 misAlumnos.add(nuevo);
                 
-                linea = lc.readLine();
-                
-               
-                
             }
             
             System.out.println("Se cargo exitosamente el reporte");
+        }catch(FileNotFoundException e ){
+            
+            System.out.println("No se encontró el archivo de lectura");
+            
         }
-        lc.close();
+
     }
 }
