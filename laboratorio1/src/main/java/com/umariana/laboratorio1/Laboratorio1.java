@@ -147,6 +147,7 @@ public class Laboratorio1 {
                     pluma.close();
        
     }
+    
     //método para agregar alumno
     public static void agregarAlumno (ArrayList<Alumno> misAlumnos, Scanner lector){
         
@@ -404,6 +405,7 @@ public class Laboratorio1 {
     
       //método para cargar archivos
     public static void cargarReporte (ArrayList<Alumno> misAlumnos) throws FileNotFoundException, IOException{
+        
         //Ubicacion donde leer
         File archivo = new File ("./data/Reporte.txt");
         
@@ -441,10 +443,19 @@ public class Laboratorio1 {
     //metodo para borrar el archivo
     public static void borrarReporte (ArrayList<Alumno>misAlumnos){
         
+        
+        if(!misAlumnos.isEmpty()){
+                
         //limpiamos el array
         misAlumnos.clear();
         
         System.out.println("Se ha borrado el contenido del archivo con éxito");
+        }else{
+            
+            System.out.println("Se encuentra vacio el archivo");
+            
+        }
+    
         
         
     }
