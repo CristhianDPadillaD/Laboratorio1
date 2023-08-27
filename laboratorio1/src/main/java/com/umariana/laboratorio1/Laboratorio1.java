@@ -31,7 +31,7 @@ public class Laboratorio1 {
             //Array donde se guardan los estudiantes
             ArrayList<Alumno>misAlumnos = new ArrayList<Alumno>();
             
-            
+            //Cargamos el archivo txt antes de todo 
             cargarReporte (misAlumnos);
             
             do {
@@ -42,40 +42,52 @@ public class Laboratorio1 {
                     
                     int opcion = lector.nextInt();
                     switch (opcion) {
+                        
+                           //Agregar Alumno
                         case 1:
-                            
                             System.out.println("Opcion uno");
                             agregarAlumno (misAlumnos, lector);
                             generarReporte(misAlumnos);
                             
-                            
+                           //Eliminar Alumno
                             break;
                         case 2:
                             System.out.println("Opcion dos");
                             eliminarAlumno(misAlumnos,lector);
-                            
+                            generarReporte(misAlumnos);
                             break;
+                            
+                          //Modificar Alumno
                         case 3:
                             System.out.println("Opcion tres");
                             modificarAlumno(misAlumnos, lector);
-                            
+                            generarReporte(misAlumnos);
                             break;
+                            
+                           //Consultar Alumnos
                         case 4:
                             System.out.println("Opcion cuatro");
-                            
-                            
                             consultarAlumnos(misAlumnos);
-                           
-                            
                             break;
+                            
+                           //Generar reporte por semestre
                         case 5:
                             System.out.println("Opcion cinco");
-                            activo = false;
-                            
+                            generarReporteSemestre(misAlumnos, lector);
                             break;
+                            
+                            
+                           //Borrar el archivo txt
                         case 6:
                             System.out.println("Opcion seis");
-                            generarReporteSemestre(misAlumnos, lector);
+                            borrarReporte(misAlumnos);
+                            generarReporte(misAlumnos);
+                            break;
+                            
+                           //Cerrar Programa
+                        case 7:
+                            System.out.println("Opcion siete");
+                            activo = false;
                             break;
                             
                             
@@ -88,14 +100,8 @@ public class Laboratorio1 {
                     
                 }catch (InputMismatchException e) {
                     System.out.println("Por favor digite un número entero ");
-                    
-                    
                     lector.next();
                 }
-                
-                
-                
-                
             }while(activo == true);
         }
     }
@@ -109,8 +115,9 @@ public class Laboratorio1 {
         System.out.println("2. Eliminar alumno");
         System.out.println("3. Modificar alumno");
         System.out.println("4. Consultar alumno");
-        System.out.println("5. Terminar programa");
-        System.out.println("6. Generar reporte por semestre");
+        System.out.println("5. Generar reporte por semestre");
+        System.out.println("6. Borrar el contenido del archivo");
+        System.out.println("7. Terminar programa");
         System.out.println(" - - - - - - - - - - - - - - - - - - - - - -");
         
         
@@ -430,4 +437,16 @@ public class Laboratorio1 {
         }
 
     }
+    
+    //metodo para borrar el archivo
+    public static void borrarReporte (ArrayList<Alumno>misAlumnos){
+        
+        //limpiamos el array
+        misAlumnos.clear();
+        
+        System.out.println("Se ha borrado el contenido del archivo con éxito");
+        
+        
+    }
+    
 }
