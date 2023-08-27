@@ -5,6 +5,12 @@
 package com.umariana.laboratorio1;
 
 import Mundo.Alumno;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -15,29 +21,104 @@ import java.util.Scanner;
  */
 public class Laboratorio1 {
 
-    public static void main(String[] args) {
-        // Funcion que permite leer la opcion dle usuario
-        Scanner lector = new Scanner (System.in );
+    public static void main(String[] args) throws FileNotFoundException, IOException {
         // bandera que permite terminar el programa
-        boolean activo = true; 
-        
-        ArrayList<Alumno>misAlumnos = new ArrayList<Alumno>();
-        do {
+        try ( // Funcion que permite leer la opcion dell usuario
+                Scanner lector = new Scanner (System.in )) {
+            // bandera que permite terminar el programa
+            boolean activo = true;
             
-            //Creamos un try catch en caso de que no se digite un número en el menú
-            try{
-                System.out.println(" - - - - - - Menú de opciones - - - - - - -");
+            ArrayList<Alumno>misAlumnos = new ArrayList<Alumno>();
+            do {
+                
+                //Creamos un try catch en caso de que no se digite un número en el menú
+                try{
+                    mostrarMenu();
+                    
+                    int opcion = lector.nextInt();
+                    switch (opcion) {
+                        case 1:
+                            
+                            System.out.println("Opcion uno");
+                            agregarAlumno (misAlumnos, lector);
+                            generarReporte(misAlumnos, lector);
+                            
+                            
+                            break;
+                        case 2:
+                            System.out.println("Opcion dos");
+                            eliminarAlumno(misAlumnos,lector);
+                            
+                            break;
+                        case 3:
+                            System.out.println("Opcion tres");
+                            modificarAlumno(misAlumnos, lector);
+                            
+                            break;
+                        case 4:
+                            System.out.println("Opcion cuatro");
+                            consultarAlumnos(misAlumnos);
+                            
+                            break;
+                        case 5:
+                            System.out.println("Opcion cinco");
+                            activo = false;
+                            
+                            break;
+                        case 6:
+                            System.out.println("Opcion seis");
+                            generarReporte(misAlumnos, lector);
+                            break;
+                            
+                        case 7:
+                            System.out.println("Opcion siete");
+                            cargarReporte(misAlumnos);
+                            break;
+                            
+                            
+                        default:
+                            System.out.println("Debe seleccionar una de las opciones del menú");
+                            break;
+                    }
+                    
+                    
+                    
+                }catch (InputMismatchException e) {
+                    System.out.println("Por favor digite un número entero ");
+                    
+                    
+                    lector.next();
+                }
+                
+                
+                
+                
+            }while(activo == true);
+        }
+    }
+    
+     //método para implementar menú
+    public static void mostrarMenu (){
+//Creamos un try catch en caso de que no se digite un número en el menú
+           
+        System.out.println(" - - - - - - Menú de opciones - - - - - - -");
         System.out.println("1. Insertar alumno");
         System.out.println("2. Eliminar alumno");
         System.out.println("3. Modificar alumno");
         System.out.println("4. Consultar alumno");
         System.out.println("5. Terminar programa");
+        System.out.println("6. Generar reporte por semestre");
+        System.out.println("7. Leer reporte");
         System.out.println(" - - - - - - - - - - - - - - - - - - - - - -");
-        int opcion = lector.nextInt();
         
-            switch (opcion) {
-                case 1:
-                      System.out.println( "########################################");
+        
+    
+    }
+    
+    //método para agregar alumno
+    public static void agregarAlumno (ArrayList<Alumno> misAlumnos, Scanner lector){
+        
+      System.out.println( "########################################");
                     System.out.println("Introduce la cedula del alumno");
                     String cedula = lector.next();
                     
@@ -69,47 +150,10 @@ public class Laboratorio1 {
                     a.setSemestre(semestre);
                      
                     // se agrega el valor del objeto al listaArray
-                    misAlumnos.add(a);
-                   
+                    misAlumnos.add(a);     
                     
                     
-                    break;
-                case 2:
-                    System.out.println("Opcion dos");
-                    eliminarAlumno(misAlumnos,lector);
-                    
-                    break;
-                case 3:
-                    System.out.println("Opcion tres");
-                    modificarAlumno(misAlumnos, lector);
-                    
-                  break;
-                case 4:
-                    System.out.println("Opcion cuatro");
-                    consultarAlumnos(misAlumnos);
-                    
-                  break;
-                case 5:
-                    System.out.println("Opcion cinco");
-                    activo = false;
-                    
-                  break;
-                    
-                default:
-                    System.out.println("Debe seleccionar una de las opciones del menú"); 
-                    break;
-            }
-            }catch (InputMismatchException e) {
-                System.out.println("Por favor digite un número entero ");
-                        
-                        
-                lector.next();
-            }
-        
-        }while(activo == true);
-        lector.close();
     }
-    
     
     //método para eliminar estudiante, con las entradas del array y el scanner
     public static void eliminarAlumno (ArrayList<Alumno>misAlumnos, Scanner lector){
@@ -155,6 +199,7 @@ public class Laboratorio1 {
     
     //metodo para modificar a un estudiante
     public static void modificarAlumno(ArrayList<Alumno>misAlumnos, Scanner lector){
+        
           if (!misAlumnos.isEmpty()){
             System.out.println( "########################################");
          //pedimos la cedula 
@@ -278,4 +323,78 @@ public class Laboratorio1 {
           System.out.println( "########################################");
     }
     
+     //método para generar Reporte
+    public static void generarReporte (ArrayList<Alumno> misAlumnos, Scanner lector) throws FileNotFoundException{
+        
+        //Creamos el archivo con la clse file
+        File archivo = new File("./data/Reporte.txt");
+        
+        //Creamos la pluma para escribir el archivo
+        PrintWriter pluma = new PrintWriter(archivo);
+         if(!misAlumnos.isEmpty()){
+        
+        System.out.println("Digite el semesetre del cual desea generar el reporte");
+        
+        String semetreR = lector.next();
+            
+            System.out.println("Se generó el archivo");
+               //Escribimos con la pluma en el archivo
+        pluma.println("Reporte Alumnos por semestre");
+        pluma.println("============================");
+            for(Alumno listaEstu: misAlumnos  ){
+                
+                
+                if(listaEstu.getSemestre().equals (semetreR)){
+                // enseñamos los datos recibidos1
+                pluma.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+                pluma.println("Cedula: " + listaEstu.getCedula());
+                pluma.println(","+ "Nombre: " + listaEstu.getNombre());
+                pluma.println("," +"Apellido: " + listaEstu.getApellido());
+                pluma.println(","+ "Correo: " + listaEstu.getCorreo());
+                pluma.println("," +"Celular: " + listaEstu.getCelular());
+                pluma.println("," +"Semestre: " + listaEstu.getSemestre());
+                pluma.println("- - - - - - - - - - - - - - - - - - - - -");
+                    }
+                
+        }  
+             pluma.close();
+             
+        }else{
+             System.out.println("No hay estudiantes");
+        }  
+        
+    }
+    
+      //método para cargar archivos
+    public static void cargarReporte (ArrayList<Alumno> misAlumnos) throws FileNotFoundException, IOException{
+        
+        File archivo = new File ("./data/Reporte.txt");
+        BufferedReader lc;
+        try (FileReader fr = new FileReader (archivo)) {
+            lc = new BufferedReader(fr);
+            String linea = lc.readLine();
+            
+            while(linea != null){
+                String [] datos = linea.split(",");
+                
+                String cedula = datos[0];
+                String nombre = datos[1];
+                String apellido= datos[2];
+                String correo = datos[3];
+                String celular = datos[4];
+                String semestre = datos[5];
+                
+                Alumno nuevo = new Alumno(cedula, nombre, apellido, correo, celular, semestre);
+                misAlumnos.add(nuevo);
+                
+                linea = lc.readLine();
+                
+               
+                
+            }
+            
+            System.out.println("Se cargo exitosamente el reporte");
+        }
+        lc.close();
+    }
 }
