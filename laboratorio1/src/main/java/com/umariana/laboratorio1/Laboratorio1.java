@@ -403,7 +403,7 @@ public class Laboratorio1 {
         
     }
     
-      //método para cargar archivos
+     //método para cargar archivos
     public static void cargarReporte (ArrayList<Alumno> misAlumnos) throws FileNotFoundException, IOException{
         
         //Ubicacion donde leer
@@ -417,6 +417,8 @@ public class Laboratorio1 {
             String linea;
             
             while((linea= lc.readLine()) != null){
+                
+                //Array donde se guardan los datos leidos
                 String [] datos = linea.split(",");
                 
                 String cedula = datos[0].trim();
@@ -459,5 +461,5 @@ public class Laboratorio1 {
         
         
     }
-    
+       
 }
